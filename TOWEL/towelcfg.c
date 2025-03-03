@@ -1,5 +1,9 @@
 #include <modes.h>
+#ifdef TCWIN
+#include "ethawin.h"
+#else
 #include <ETHAWIN/ethawin.h>
+#endif
 
 char *towelcfg [] = {
    "COPY",
@@ -76,7 +80,10 @@ int wpath;
    };
 
    fpath=open("/DD/SYS/ETHAWIN/Towel.cfg",S_IREAD); /* open cfg file */
-   if (fpath==-1) return(FALSE);
+   if (fpath==-1) {
+      fpath=open("./Towel.cfg",S_IREAD); /* open cfg file */
+      if (fpath == -1) return(FALSE);
+   }
 
    while ( (pos=(readln(fpath,line,80)))>0 ) { /* while able to read, */
       /* pos points to last character of line (len) */

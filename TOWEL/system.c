@@ -1,5 +1,10 @@
+#ifdef TCWIN
+#include "ethawin.h"
+#include "ethaext.h"
+#else
 #include <ETHAWIN/ethawin.h>
 #include <ETHAWIN/ethaext.h>
+#endif
 
 int System(wpath,cmd)
 int wpath;
@@ -22,8 +27,13 @@ char *cmd;
    _ss_opt(wpath,&sgbufnew);
 
    /* v1.01 */
+#ifdef TCWIN
+   while (_gs_rdy(0)>0) { /* read characters while available */
+      read(0,&ch,1);
+#else
    while (_gs_rdy(wpath)>0) { /* read characters while available */
       read(wpath,&ch,1);
+#endif
       if (ch==QUIT) {
          if (YesNo(wpath,"Keyboard Abort!")) return(TRUE);
       }
